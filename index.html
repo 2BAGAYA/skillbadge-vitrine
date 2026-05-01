@@ -3,286 +3,1280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkillBadge — Certification blockchain pour les talents numériques du Burkina Faso</title>
-<link rel="stylesheet" href="style.css">
+<title>SkillBadge — Certification Numérique</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3d;
+    --accent-green: #00e676;
+    --accent-blue: #448aff;
+    --accent-orange: #ff6d00;
+    --accent-violet: #d500f9;
+    --text: #e8e8f0;
+    --text-muted: #7a7a9a;
+    --white: #ffffff;
+    --success: #00e676;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    height: 64px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent-green);
+    margin-right: auto;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--text-muted); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    color: var(--text-muted);
+  }
+  .nav-tab:hover { color: var(--text); background: var(--surface2); }
+  .nav-tab.active { color: var(--white); border-color: var(--border); }
+  .nav-tab[data-tab="formateur"].active { background: #0d2818; border-color: var(--accent-green); color: var(--accent-green); }
+  .nav-tab[data-tab="apprenant"].active { background: #0d1828; border-color: var(--accent-blue); color: var(--accent-blue); }
+  .nav-tab[data-tab="recruteur"].active { background: #1a0828; border-color: var(--accent-violet); color: var(--accent-violet); }
+
+  /* ─── PAGES ─── */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 220px;
+    min-height: calc(100vh - 64px);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    flex-shrink: 0;
+  }
+  .sidebar-brand {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    padding: 0 0.5rem;
+  }
+  .sidebar-brand-dot {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.7rem; color: #fff;
+  }
+  .formateur .sidebar-brand-dot { background: var(--accent-green); }
+  .apprenant .sidebar-brand-dot { background: var(--accent-blue); }
+  .recruteur .sidebar-brand-dot { background: var(--accent-violet); }
+
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.18s;
+    margin-bottom: 2px;
+    position: relative;
+  }
+  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item.active { background: var(--surface2); color: var(--text); }
+  .formateur .sidebar-item.active { color: var(--accent-green); }
+  .apprenant .sidebar-item.active { color: var(--accent-blue); }
+  .recruteur .sidebar-item.active { color: var(--accent-violet); }
+
+  .badge-count {
+    margin-left: auto;
+    background: var(--accent-orange);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+  .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0.5rem; }
+
+  /* ─── MAIN CONTENT ─── */
+  .content { flex: 1; padding: 2rem; overflow-y: auto; }
+
+  /* ─── STEPS BAR ─── */
+  .steps-bar {
+    display: flex; align-items: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    margin-bottom: 1.5rem;
+    gap: 0;
+  }
+  .step { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; font-family: 'Space Mono', monospace;
+    background: var(--surface); border: 2px solid var(--border); color: var(--text-muted);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .step.active .step-num { background: var(--accent-green); border-color: var(--accent-green); color: #000; }
+  .step.done .step-num { background: var(--accent-green); border-color: var(--accent-green); color: #000; }
+  .step-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+  .step.active .step-label, .step.done .step-label { color: var(--text); }
+  .step-connector { width: 40px; height: 2px; background: var(--border); margin: 0 8px; flex-shrink: 0; transition: background 0.3s; }
+  .step-connector.done { background: var(--accent-green); }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+  .card-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* ─── FORM ─── */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-label span { color: #ff4444; margin-left: 2px; }
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent-green); }
+  select option { background: var(--surface2); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ─── LEVEL BUTTONS ─── */
+  .level-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .level-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    opacity: 0.5;
+  }
+  .level-btn.debutant { background: #0d2818; border-color: var(--accent-green); color: var(--accent-green); }
+  .level-btn.intermediaire { background: #0d1828; border-color: var(--accent-blue); color: var(--accent-blue); }
+  .level-btn.avance { background: #1a1200; border-color: var(--accent-orange); color: var(--accent-orange); }
+  .level-btn.expert { background: #1a0828; border-color: var(--accent-violet); color: var(--accent-violet); }
+  .level-btn.selected { opacity: 1; }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent-green); color: #000; }
+  .btn-primary:hover { background: #00c853; }
+  .btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-secondary:hover { background: var(--surface2); }
+  .btn-danger { background: transparent; color: #ff4444; border-color: #ff4444; }
+  .btn-danger:hover { background: rgba(255,68,68,0.1); }
+  .btn-orange { background: var(--accent-orange); color: #fff; }
+  .btn-orange:hover { background: #e65100; }
+  .btn-violet { background: var(--accent-violet); color: #fff; }
+  .btn-blue { background: var(--accent-blue); color: #fff; }
+  .btn-whatsapp { background: #25D366; color: #fff; }
+  .btn-whatsapp:hover { background: #128C7E; }
+
+  .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  /* ─── BADGE PREVIEW ─── */
+  .badge-preview-area {
+    display: grid; grid-template-columns: 1fr 240px; gap: 1.5rem;
+  }
+  .badge-preview-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 12px;
+  }
+  .badge-icon {
+    width: 80px; height: 80px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    border: 3px solid;
+    transition: all 0.3s;
+  }
+  .badge-icon.debutant { background: #0d2818; border-color: var(--accent-green); color: var(--accent-green); }
+  .badge-icon.intermediaire { background: #0d1828; border-color: var(--accent-blue); color: var(--accent-blue); }
+  .badge-icon.avance { background: #1a1200; border-color: var(--accent-orange); color: var(--accent-orange); }
+  .badge-icon.expert { background: #1a0828; border-color: var(--accent-violet); color: var(--accent-violet); }
+  .badge-preview-name { font-weight: 800; font-size: 1rem; }
+  .badge-preview-level { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .badge-preview-level.debutant { background: #0d2818; color: var(--accent-green); }
+  .badge-preview-level.intermediaire { background: #0d1828; color: var(--accent-blue); }
+  .badge-preview-level.avance { background: #1a1200; color: var(--accent-orange); }
+  .badge-preview-level.expert { background: #1a0828; color: var(--accent-violet); }
+  .badge-preview-domain { font-size: 0.75rem; color: var(--text-muted); }
+  .badge-preview-issuer { font-size: 0.7rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+
+  /* ─── WALLET SEARCH ─── */
+  .wallet-search-row { display: flex; gap: 8px; }
+  .wallet-result {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    align-items: center; gap: 12px;
+  }
+  .wallet-result.visible { display: flex; }
+  .wallet-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.85rem; color: #fff; flex-shrink: 0;
+  }
+  .wallet-info { flex: 1; }
+  .wallet-name { font-weight: 700; font-size: 0.9rem; }
+  .wallet-email { font-size: 0.75rem; color: var(--text-muted); }
+  .wallet-addr { font-size: 0.7rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .found-badge {
+    background: #0d2818; color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    border-radius: 20px;
+    padding: 3px 10px; font-size: 0.7rem; font-weight: 700;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .not-found-badge {
+    background: #1a0808; color: #ff4444;
+    border: 1px solid #ff4444;
+    border-radius: 20px;
+    padding: 3px 10px; font-size: 0.7rem; font-weight: 700;
+  }
+
+  /* ─── SUCCESS PAGE ─── */
+  .success-panel {
+    text-align: center; padding: 2rem;
+  }
+  .success-checkmark {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+  .success-sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem; }
+  .receipt-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .receipt-table tr { border-bottom: 1px solid var(--border); }
+  .receipt-table tr:last-child { border-bottom: none; }
+  .receipt-table td { padding: 10px 12px; font-size: 0.85rem; }
+  .receipt-table td:first-child { color: var(--text-muted); font-weight: 600; width: 140px; }
+  .receipt-table td:last-child { font-family: 'Space Mono', monospace; font-size: 0.78rem; }
+  .hash-value { color: var(--accent-green); }
+  .confirmed-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #0d2818; color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    border-radius: 20px; padding: 2px 8px; font-size: 0.7rem; font-weight: 700;
+  }
+
+  /* ─── PORTFOLIO GRID ─── */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    text-align: center;
+  }
+  .stat-val { font-size: 1.8rem; font-weight: 800; font-family: 'Space Mono', monospace; }
+  .stat-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+  .portfolio-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
+  .badge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .badge-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 10px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .badge-card:hover { transform: translateY(-2px); }
+  .badge-card.debutant:hover { border-color: var(--accent-green); }
+  .badge-card.intermediaire:hover { border-color: var(--accent-blue); }
+  .badge-card.avance:hover { border-color: var(--accent-orange); }
+  .badge-card.expert:hover { border-color: var(--accent-violet); }
+  .badge-card-icon {
+    width: 60px; height: 60px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-family: 'Space Mono', monospace; font-weight: 700;
+    border: 2px solid;
+  }
+  .badge-card-icon.intermediaire { background: #0d1828; border-color: var(--accent-blue); color: var(--accent-blue); }
+  .badge-card-icon.debutant { background: #0d2818; border-color: var(--accent-green); color: var(--accent-green); }
+  .badge-card-icon.avance { background: #1a1200; border-color: var(--accent-orange); color: var(--accent-orange); }
+  .badge-card-icon.expert { background: #1a0828; border-color: var(--accent-violet); color: var(--accent-violet); }
+  .badge-card-name { font-weight: 800; font-size: 0.92rem; }
+  .badge-card-domain { font-size: 0.72rem; color: var(--text-muted); }
+  .badge-card-date { font-size: 0.68rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .badge-level-tag { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .badge-level-tag.intermediaire { background: #0d1828; color: var(--accent-blue); }
+  .badge-level-tag.debutant { background: #0d2818; color: var(--accent-green); }
+  .badge-level-tag.avance { background: #1a1200; color: var(--accent-orange); }
+  .badge-level-tag.expert { background: #1a0828; color: var(--accent-violet); }
+  .badge-verified {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 0.6rem; font-weight: 700;
+    background: #0d2818; color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    border-radius: 20px; padding: 1px 6px;
+  }
+
+  /* ─── VALIDATION FORM ─── */
+  .validation-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .validation-title { font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+  .validation-sub { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+
+  /* ─── RECRUITER ─── */
+  .recruiter-layout { max-width: 860px; margin: 0 auto; }
+  .recruiter-header {
+    text-align: center; padding: 2.5rem 0 2rem;
+  }
+  .recruiter-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+  .recruiter-header p { color: var(--text-muted); font-size: 0.9rem; }
+  .search-big { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+  .search-big input { flex: 1; font-size: 1rem; padding: 14px 18px; }
+  .search-big .btn { padding: 14px 24px; }
+  .no-account-note {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem; color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .result-section { display: none; }
+  .result-section.visible { display: block; animation: fadeIn 0.3s ease; }
+  .result-header {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .result-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--accent-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.1rem; color: #fff;
+  }
+  .result-name { font-weight: 800; font-size: 1.1rem; }
+  .result-wallet { font-size: 0.72rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+  .result-badges-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .rec-badge-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .authentic-tag {
+    display: flex; align-items: center; gap: 5px;
+    background: #0d2818; color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.72rem; font-weight: 700;
+    margin-left: auto;
+  }
+  .rec-badge-details { flex: 1; }
+  .rec-badge-name { font-weight: 800; font-size: 0.95rem; }
+  .rec-badge-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .rec-badge-hash { font-size: 0.68rem; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-top: 4px; }
+  .blockchain-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: var(--accent-blue);
+    text-decoration: none; font-weight: 600;
+    padding: 4px 10px; border: 1px solid var(--accent-blue);
+    border-radius: 6px; transition: background 0.2s;
+  }
+  .blockchain-link:hover { background: rgba(68,138,255,0.1); }
+  .not-found-msg {
+    display: none;
+    text-align: center; padding: 2rem;
+    color: var(--text-muted); font-size: 0.9rem;
+  }
+  .not-found-msg.visible { display: block; animation: fadeIn 0.3s ease; }
+
+  /* ─── REQUESTS ─── */
+  .request-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  .req-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.8rem; color: #fff; flex-shrink: 0;
+  }
+  .req-info { flex: 1; }
+  .req-name { font-weight: 700; font-size: 0.88rem; }
+  .req-meta { font-size: 0.72rem; color: var(--text-muted); }
+  .req-badge-tag {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    background: #0d1828; color: var(--accent-blue);
+  }
+  .req-date { font-size: 0.7rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-it-works {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .how-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .how-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1rem; }
+  .how-step:last-child { margin-bottom: 0; }
+  .how-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-violet);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .how-text { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--accent-green);
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    font-weight: 600; font-size: 0.88rem;
+    color: var(--accent-green);
+    z-index: 9999;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ─── MISC ─── */
+  .section-title { font-size: 1rem; font-weight: 800; margin-bottom: 1rem; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 700;
+  }
+  .info-note {
+    background: rgba(68,138,255,0.08);
+    border: 1px solid rgba(68,138,255,0.3);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 0.78rem; color: var(--accent-blue); margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .badge-preview-area { grid-template-columns: 1fr; }
+    .portfolio-layout { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ─── BADGE DETAIL MODAL ─── */
+  .badge-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .badge-modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  .badge-modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    position: relative;
+  }
+  .badge-modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-muted); font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: all 0.2s;
+  }
+  .badge-modal-close:hover { background: var(--border); color: var(--text); }
+</style>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">Skill<span>Badge</span></div>
-  <div class="nav-links">
-    <a href="#probleme">Problème</a>
-    <a href="#fonctionnement">Fonctionnement</a>
-    <a href="#utilisateurs">Utilisateurs</a>
-    <a href="#impact">Impact</a>
-    <a href="#blockchain">Blockchain</a>
+  <div class="nav-logo"></>  Skill<span>Badge</span></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-tab="formateur" onclick="switchTab('formateur')">🎓 Formateur</div>
+    <div class="nav-tab" data-tab="apprenant" onclick="switchTab('apprenant')">🎒 Apprenant</div>
+    <div class="nav-tab" data-tab="recruteur" onclick="switchTab('recruteur')">🔍 Recruteur</div>
   </div>
-  <a href="#rejoindre" class="nav-cta">Commencer</a>
 </nav>
 
-<!-- HERO -->
-<header>
-  <div class="hero-tag">MIABE Hackathon 2026 · Burkina Faso · ODD 4 · ODD 8 · ODD 9</div>
-  <h1>Prouve tes compétences.<br/>Décroche l'emploi que<br/><span>tu mérites vraiment.</span></h1>
-  <p>SkillBadge transforme les compétences numériques des autodidactes burkinabè en badges blockchain vérifiables, infalsifiables et reconnus par les employeurs.</p>
-  <div class="hero-btns">
-    <a href="#rejoindre" class="btn-primary">Créer mon portfolio</a>
-    <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
-  </div>
-  <div class="hero-stats">
-    <div class="hstat"><div class="hstat-n">15 000</div><div class="hstat-l">Autodidactes formés chaque année</div></div>
-    <div class="hstat"><div class="hstat-n">5%</div><div class="hstat-l">Seulement certifiés officiellement</div></div>
-    <div class="hstat"><div class="hstat-n">70%</div><div class="hstat-l">Employeurs peinent à évaluer les candidats</div></div>
-  </div>
-</header>
-
-<!-- PROBLÈME -->
-<section id="probleme" class="alt">
-  <div class="section-inner">
-    <div class="section-tag">Le problème</div>
-    <h2>Un fossé entre compétences réelles et reconnaissance officielle</h2>
-    <p class="section-sub">Au Burkina Faso, des milliers de jeunes maîtrisent React.js, Flutter ou Python — mais ne peuvent pas le prouver à un recruteur avec la même crédibilité qu'un diplômé.</p>
-    <div class="grid2">
-      <div class="prob-card bad">
-        <div class="level-pill" style="background:#fdecea;color:#c0392b;">Sans SkillBadge</div>
-        <ul class="prob-list">
-          <li><div class="dot-red"></div>Les attestations informelles ne sont pas vérifiables par les employeurs</li>
-          <li><div class="dot-red"></div>70% des employeurs IT burkinabè ne savent pas évaluer les autodidactes (enquête 2023)</li>
-          <li><div class="dot-red"></div>Les diplômés d'école sont favorisés même s'ils sont moins compétents</li>
-          <li><div class="dot-red"></div>8 000 développeurs formés entre 2020–2023 sans certification standardisée</li>
-          <li><div class="dot-red"></div>Moins de 5% des apprenants obtiennent une certification reconnue</li>
-        </ul>
-      </div>
-      <div class="prob-card good">
-        <div class="level-pill" style="background:#eafaf1;color:#1e8449;">Avec SkillBadge</div>
-        <ul class="prob-list">
-          <li><div class="dot-green"></div>Badges NFT infalsifiables, vérifiables en 0,3 seconde par n'importe quel recruteur</li>
-          <li><div class="dot-green"></div>Émis par des formateurs et institutions habilités reconnus</li>
-          <li><div class="dot-green"></div>Portfolio public partageable partout : LinkedIn, WhatsApp, email</li>
-          <li><div class="dot-green"></div>Progression visible de débutant à expert par compétence</li>
-          <li><div class="dot-green"></div>+40% d'employabilité constatée avec la certification blockchain en Afrique de l'Est</li>
-        </ul>
-      </div>
+<!-- ═══════════════════════════════════════════
+     PAGE FORMATEUR
+════════════════════════════════════════════ -->
+<div class="page active" id="page-formateur">
+  <div class="sidebar formateur">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-dot">F</div>
+      <div>Badge Chain<br><span style="font-size:0.65rem;color:#444">Formateur ABC</span></div>
     </div>
+    <div class="sidebar-item active" onclick="showFormateurStep(1)">＋ Créer un badge</div>
+    <div class="sidebar-item" onclick="">Badges créés</div>
+    <div class="sidebar-item" onclick="">Demandes reçues <span class="badge-count">3</span></div>
+    <div class="sidebar-item" onclick="">Apprenants</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-item" onclick="">Paramètres</div>
+    <div class="sidebar-item" onclick="">Déconnexion</div>
   </div>
-</section>
 
-<!-- FONCTIONNEMENT -->
-<section id="fonctionnement">
-  <div class="section-inner">
-    <div class="section-tag">Fonctionnement</div>
-    <h2>Simple, rapide, vérifiable</h2>
-    <p class="section-sub">Trois étapes pour passer d'une compétence apprise à un badge reconnu partout au Burkina Faso et à l'international.</p>
-    <div class="grid3">
+  <div class="content">
+    <!-- STEPS BAR -->
+    <div class="steps-bar">
+      <div class="step active" id="fstep-1"><div class="step-num">1</div><div class="step-label">Créer le badge</div></div>
+      <div class="step-connector" id="conn-1"></div>
+      <div class="step" id="fstep-2"><div class="step-num">2</div><div class="step-label">Attribuer</div></div>
+      <div class="step-connector" id="conn-2"></div>
+      <div class="step" id="fstep-3"><div class="step-num">✓</div><div class="step-label">Confirmation</div></div>
+    </div>
+
+    <!-- STEP 1: CRÉER -->
+    <div id="formateur-step-1">
       <div class="card">
-        <div style="width:36px;height:36px;border-radius:50%;background:#0a66c2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;margin-bottom:14px;">1</div>
-        <h3>Le formateur émet un badge</h3>
-        <p>Un centre de formation habilité crée un badge de compétence et l'attribue à un apprenant ayant satisfait aux critères d'évaluation définis.</p>
-        <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e0e8f4;font-size:11px;color:#999;">Cercle Numérique · Laafi Tech · Yida Digital · Bootcamps · ONG</div>
-      </div>
-      <div class="card" style="border:2px solid #0a66c2;">
-        <div style="width:36px;height:36px;border-radius:50%;background:#0a66c2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;margin-bottom:14px;">2</div>
-        <h3>L'apprenant collecte ses badges</h3>
-        <p>Chaque badge rejoint automatiquement le portfolio blockchain de l'apprenant — public, partageable, accessible depuis son téléphone.</p>
-        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
-          <span class="level-pill lp-purple">Expert</span>
-          <span class="level-pill lp-amber">Avancé</span>
-          <span class="level-pill lp-blue">Intermédiaire</span>
-          <span class="level-pill lp-green">Débutant</span>
+        <div class="card-title">Créer un badge</div>
+        <div class="card-sub">Renseignez les 3 informations essentielles du badge</div>
+        <div class="badge-preview-area">
+          <div>
+            <div class="form-row single" style="margin-bottom:1rem">
+              <div class="form-group">
+                <div class="form-label">Domaine de compétence <span>*</span></div>
+                <select id="f-domaine" onchange="updateBadgePreview()">
+                  <option>Développement Web</option>
+                  <option>Intelligence Artificielle</option>
+                  <option>Cybersécurité</option>
+                  <option>Marketing Digital</option>
+                  <option>Design UX/UI</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row single" style="margin-bottom:1rem">
+              <div class="form-group">
+                <div class="form-label">Compétence spécifique <span>*</span></div>
+                <input type="text" id="f-competence" placeholder="ex : JavaScript, Machine Learning, etc." oninput="updateBadgePreview()">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:1.5rem">
+              <div class="form-label">Niveau de maîtrise <span>*</span></div>
+              <div class="level-btns">
+                <div class="level-btn debutant" onclick="selectLevel('debutant')">Débutant</div>
+                <div class="level-btn intermediaire" onclick="selectLevel('intermediaire')">Intermédiaire</div>
+                <div class="level-btn avance" onclick="selectLevel('avance')">Avancé</div>
+                <div class="level-btn expert" onclick="selectLevel('expert')">Expert</div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="goToStep2()">Créer le badge →</button>
+              <button class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+            </div>
+            <div class="info-note" style="margin-top:1rem;margin-bottom:0">↗ Après création, vous serez redirigé vers l'étape d'attribution du badge à un apprenant</div>
+          </div>
+          <div class="badge-preview-panel">
+            <div style="font-size:0.7rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;margin-bottom:4px">Aperçu</div>
+            <div class="badge-icon intermediaire" id="preview-icon"></>/></div>
+            <div class="badge-preview-name" id="preview-name">JavaScript</div>
+            <div class="badge-preview-level intermediaire" id="preview-level">Intermédiaire</div>
+            <div class="badge-preview-domain" id="preview-domain">Développement Web</div>
+            <div class="badge-preview-issuer">Formateur ABC · SkillBadge</div>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- STEP 2: ATTRIBUER -->
+    <div id="formateur-step-2" style="display:none">
       <div class="card">
-        <div style="width:36px;height:36px;border-radius:50%;background:#0a66c2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;margin-bottom:14px;">3</div>
-        <h3>Le recruteur vérifie en secondes</h3>
-        <p>En saisissant l'adresse wallet du candidat, le recruteur voit instantanément tous ses badges certifiés, leurs émetteurs et leur validité.</p>
-        <div style="margin-top:12px;padding:8px 14px;background:#eafaf1;border-radius:8px;font-size:12px;color:#1e8449;font-weight:700;">Vérification en 0,3 secondes · 100% fiable</div>
-      </div>
-    </div>
-  </div>
-</section>
+        <div class="card-title">Attribuer le badge</div>
+        <div class="card-sub">Trouvez l'apprenant par son adresse wallet</div>
 
-<!-- BADGES -->
-<section class="alt">
-  <div class="section-inner">
-    <div class="section-tag">Catégories de badges</div>
-    <h2>Des compétences numériques adaptées à l'écosystème burkinabè</h2>
-    <p class="section-sub">Chaque compétence dispose de 4 niveaux de progression. Les badges couvrent les domaines les plus demandés sur le marché IT local.</p>
-    <div class="grid4">
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#c8e6fa;"></div>
-        <span class="level-pill lp-blue">Développement Web</span>
-        <p>HTML, CSS, JavaScript, React.js, Vue.js, Node.js</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#c8f0e0;"></div>
-        <span class="level-pill lp-green">Data Science</span>
-        <p>Python, Pandas, Machine Learning, visualisation de données</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#fce8c8;"></div>
-        <span class="level-pill lp-amber">Mobile</span>
-        <p>Flutter, React Native, développement Android & iOS</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#ede8fc;"></div>
-        <span class="level-pill lp-purple">Cybersécurité</span>
-        <p>Sécurité réseau, ethical hacking, protection des données</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#fde8e8;"></div>
-        <span class="level-pill" style="background:#fde8e8;color:#c0392b;">Design UI/UX</span>
-        <p>Figma, prototypage, expérience utilisateur, accessibilité</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#e8f8e8;"></div>
-        <span class="level-pill" style="background:#e8f8e8;color:#27ae60;">DevOps & Cloud</span>
-        <p>Docker, CI/CD, déploiement cloud, Linux, Git</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#fff8e0;"></div>
-        <span class="level-pill" style="background:#fff8e0;color:#b7770d;">Gestion de projet</span>
-        <p>Agile, Scrum, coordination d'équipes tech, roadmaps</p>
-      </div>
-      <div class="badge-card">
-        <div class="badge-hex" style="background:#e8eeff;"></div>
-        <span class="level-pill" style="background:#e8eeff;color:#2c5fab;">Blockchain</span>
-        <p>Smart contracts, Web3, Solidity, développement décentralisé</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- UTILISATEURS -->
-<section id="utilisateurs">
-  <div class="section-inner">
-    <div class="section-tag">Utilisateurs</div>
-    <h2>Une plateforme pour tous les acteurs du numérique burkinabè</h2>
-    <p class="section-sub">Formateurs, apprenants et recruteurs — chacun a son espace dédié sur SkillBadge.</p>
-    <div class="grid3">
-      <div class="user-card">
-        <div class="user-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#0a66c2" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;margin-bottom:1.5rem;font-size:0.82rem;color:var(--text-muted)">
+          Badge sélectionné : <strong id="modal-badge-name" style="color:var(--text)">JavaScript — Intermédiaire</strong>
         </div>
-        <h3>Apprenants autodidactes</h3>
-        <p>Jeunes développeurs, designers et techniciens qui se forment via YouTube, bootcamps ou mentors informels. SkillBadge donne une valeur officielle à leurs compétences réelles.</p>
-        <a href="#rejoindre" class="btn-card">Créer mon portfolio</a>
-      </div>
-      <div class="user-card featured">
-        <div class="badge-role">Clé de voûte</div>
-        <div class="user-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#0a66c2" stroke-width="1.8"/><line x1="8" y1="10" x2="16" y2="10" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round"/><line x1="8" y1="14" x2="13" y2="14" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </div>
-        <h3>Formateurs et institutions</h3>
-        <p>Centres de formation, bootcamps, ONG et universités. Ils émettent des badges officiels et contribuent à standardiser la certification numérique au Burkina Faso.</p>
-        <a href="#rejoindre" class="btn-card">Devenir formateur habilité</a>
-      </div>
-      <div class="user-card">
-        <div class="user-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#0a66c2" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round"/><path d="M16 10l1.5 1.5L21 8" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Recruteurs et entreprises</h3>
-        <p>Startups, entreprises IT, ONG et institutions internationales cherchant des talents burkinabè vérifiés. Évaluez les candidats en secondes, sans risque de fraude.</p>
-        <a href="#rejoindre" class="btn-card">Accéder au portail recruteur</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- IMPACT -->
-<section id="impact" class="alt">
-  <div class="section-inner">
-    <div class="section-tag">Impact attendu</div>
-    <h2>Un marché du talent numérique plus juste et plus visible</h2>
-    <p class="section-sub">SkillBadge s'attaque directement aux inégalités d'accès à l'emploi tech en transformant l'économie informelle du savoir en opportunités mesurables.</p>
-    <div class="grid4">
-      <div class="stat-card"><div class="num">15 000</div><div class="lbl">Jeunes burkinabè se forment au numérique chaque année via des canaux informels</div></div>
-      <div class="stat-card"><div class="num">+40%</div><div class="lbl">D'employabilité constatée avec la certification blockchain en Afrique de l'Est</div></div>
-      <div class="stat-card"><div class="num">8 000</div><div class="lbl">Développeurs formés entre 2020–2023 à Ouagadougou sans certification standardisée</div></div>
-      <div class="stat-card"><div class="num">0,3 s</div><div class="lbl">Temps de vérification d'un badge — instantané, fiable, infalsifiable</div></div>
-    </div>
-    <div class="quote-box">
-      <p>"Un jeune de Ouagadougou qui maîtrise React.js mérite d'être reconnu avec la même crédibilité qu'un diplômé d'une grande école. SkillBadge lui donne cette carte d'identité professionnelle vérifiable en secondes."</p>
-      <span>Équipe SkillBadge · MIABE Hackathon 2026 · Darollo Technologies Corporation</span>
-    </div>
-    <div class="odd-row">
-      <div class="odd-pill odd4">ODD 4 — Éducation de qualité</div>
-      <div class="odd-pill odd8">ODD 8 — Travail décent</div>
-      <div class="odd-pill odd9">ODD 9 — Innovation</div>
-    </div>
-  </div>
-</section>
+        <div class="form-group" style="margin-bottom:0.5rem">
+          <div class="form-label">Adresse wallet de l'apprenant <span>*</span></div>
+          <div class="wallet-search-row">
+            <input type="text" id="wallet-input" placeholder="0xAB...4F3E ou adresse complète" oninput="searchWallet()">
+            <button class="btn btn-secondary" onclick="searchWallet()">Rechercher</button>
+          </div>
+        </div>
 
-<!-- BLOCKCHAIN -->
-<div class="blockchain-section" id="blockchain">
-  <div class="section-inner">
-    <div class="section-tag">Pourquoi la blockchain ?</div>
-    <h2>Un badge blockchain est une carte d'identité professionnelle infalsifiable</h2>
-    <p class="section-sub">Contrairement à un certificat PDF ou une attestation papier, un badge NFT est unique, lié à une identité précise, et vérifiable en quelques secondes par n'importe qui, n'importe où.</p>
-    <div class="bc-grid">
-      <div class="bc-item">
-        <h4>Unique</h4>
-        <p>Chaque badge est un NFT lié à un apprenant identifié. Impossible à copier ou à partager entre personnes.</p>
+        <div class="wallet-result" id="wallet-found">
+          <div class="wallet-avatar">AB</div>
+          <div class="wallet-info">
+            <div class="wallet-name">Amadou BARRY</div>
+            <div class="wallet-email">✉ amadou.barry@email.com</div>
+            <div class="wallet-addr">0xAB4F3E982C1D7E56B3A9F012D4C8E7B1A5F230D9</div>
+          </div>
+          <div class="found-badge">✓ Trouvé</div>
+        </div>
+        <div class="wallet-result" id="wallet-not-found" style="border-color:#ff4444">
+          <div style="color:#ff4444;font-size:0.85rem;font-weight:600">⚠ Adresse wallet introuvable dans le système</div>
+        </div>
+
+        <div class="form-group" style="margin: 1rem 0">
+          <div class="form-label">Message d'attribution (optionnel)</div>
+          <textarea placeholder="ex : Félicitations pour la validation de JavaScript — Intermédiaire. Ce badge a été enregistré de manière permanente sur la blockchain."></textarea>
+        </div>
+
+        <div class="form-row single" style="margin-bottom:1rem">
+          <div class="form-group">
+            <div class="form-label">Date d'attribution</div>
+            <select>
+              <option>01/05/2026 (aujourd'hui)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-attribuer" onclick="goToStep3()" style="opacity:0.4;pointer-events:none">Attribuer le badge</button>
+          <button class="btn btn-secondary" onclick="showFormateurStep(1)">← Retour</button>
+          <button class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+        </div>
       </div>
-      <div class="bc-item">
-        <h4>Infalsifiable</h4>
-        <p>Enregistré sur la blockchain, le badge ne peut pas être modifié, antidaté ou créé sans l'accord du formateur habilité.</p>
-      </div>
-      <div class="bc-item">
-        <h4>Vérifiable en 0,3 s</h4>
-        <p>N'importe quel recruteur vérifie l'authenticité d'un badge en 0,3 secondes, sans intermédiaire, depuis n'importe quel appareil.</p>
-      </div>
-      <div class="bc-item">
-        <h4>Révocable</h4>
-        <p>Un formateur peut révoquer un badge si nécessaire. La révocation est inscrite sur la chaîne et visible immédiatement.</p>
+    </div>
+
+    <!-- STEP 3: CONFIRMATION -->
+    <div id="formateur-step-3" style="display:none">
+      <div class="card">
+        <div class="success-panel">
+          <div class="success-checkmark">✓</div>
+          <div class="success-title">Badge attribué avec succès !</div>
+          <div class="success-sub">Le badge a été minté sur la blockchain et envoyé au wallet de l'apprenant</div>
+          <table class="receipt-table" style="margin-top:1rem">
+            <tr><td>Badge</td><td id="conf-badge">JavaScript — Intermédiaire</td></tr>
+            <tr><td>Apprenant</td><td>Amadou BARRY (0xAB...4F3E)</td></tr>
+            <tr><td>Émetteur</td><td>Formateur ABC (0xF0...982C)</td></tr>
+            <tr><td>Date</td><td>01/05/2026 à 14h32</td></tr>
+            <tr><td>ID du badge</td><td>#BADGE_JS_001_0xAB</td></tr>
+            <tr><td>Hash blockchain</td><td><span class="hash-value">0x7f5a...d9c1</span> <span class="confirmed-badge">✓ Confirmé</span></td></tr>
+          </table>
+          <div class="btn-row" style="justify-content:center;margin-top:1.5rem">
+            <button class="btn btn-primary" onclick="resetForm()">Créer un nouveau badge</button>
+            <button class="btn btn-secondary">Voir les demandes reçues</button>
+            <button class="btn btn-secondary">Tableau de bord</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- CTA FINAL -->
-<div class="cta-section" id="rejoindre">
-  <h2>Rejoignez l'écosystème SkillBadge</h2>
-  <p>Que vous soyez apprenant, formateur ou recruteur — votre place est ici.</p>
-  <div class="cta-cards">
-    <div class="cta-card">
-      <h4>Je suis apprenant</h4>
-      <p>Crée ton portfolio et commence à collecter tes badges de compétences certifiés.</p>
-      <a href="#" class="btn-cta">Créer mon portfolio</a>
+<!-- ═══════════════════════════════════════════
+     PAGE APPRENANT
+════════════════════════════════════════════ -->
+<div class="page" id="page-apprenant">
+  <div class="sidebar apprenant">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-dot" style="background:var(--accent-blue)">AB</div>
+      <div>Amadou BARRY<br><span style="font-size:0.65rem;color:#444">0xAB...4F3E</span></div>
     </div>
-    <div class="cta-card">
-      <h4>Je suis formateur</h4>
-      <p>Deviens un émetteur de badges officiels et valorise tes apprenants.</p>
-      <a href="#" class="btn-cta">Rejoindre le réseau</a>
+    <div class="sidebar-item active">Mes badges</div>
+    <div class="sidebar-item">Demander validation</div>
+    <div class="sidebar-item">Historique</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-item">Paramètres</div>
+    <div class="sidebar-item">Déconnexion</div>
+  </div>
+
+  <div class="content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <div>
+        <h1 style="font-size:1.5rem;font-weight:800">Mon Portfolio</h1>
+        <div style="font-size:0.78rem;color:var(--text-muted)">Mes badges certifiés sur la blockchain</div>
+      </div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.75rem;background:var(--surface2);border:1px solid var(--border);padding:6px 12px;border-radius:8px;color:var(--text-muted)">0xAB...4F3E</div>
     </div>
-    <div class="cta-card">
-      <h4>Je suis recruteur</h4>
-      <p>Vérifie les compétences de tes candidats en quelques secondes.</p>
-      <a href="#" class="btn-cta">Accéder au portail</a>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-green)">2</div><div class="stat-label">Badges obtenus</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-blue)">Interm.</div><div class="stat-label">Niveau max</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-orange)">0</div><div class="stat-label">En attente</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-violet)">88%</div><div class="stat-label">Profil complété</div></div>
+    </div>
+
+    <div class="portfolio-layout">
+      <!-- BADGES -->
+      <div>
+        <div class="section-title">Mes badges NFT</div>
+        <div class="badge-grid">
+          <!-- Badge 1 -->
+          <div class="badge-card intermediaire">
+            <div class="badge-verified">✓ Vérifié</div>
+            <div class="badge-card-icon intermediaire"></>/></div>
+            <div class="badge-card-name">JavaScript</div>
+            <div class="badge-card-domain">Développement Web</div>
+            <div class="badge-level-tag intermediaire">Intermédiaire</div>
+            <div class="badge-card-date">01/05/2026</div>
+            <button class="btn btn-whatsapp" style="width:100%;justify-content:center;margin-top:4px;font-size:0.78rem;padding:8px" onclick="shareOnWhatsApp('js')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Partager
+            </button>
+          </div>
+          <!-- Badge 2 -->
+          <div class="badge-card debutant">
+            <div class="badge-verified">✓ Vérifié</div>
+            <div class="badge-card-icon debutant">🐍</div>
+            <div class="badge-card-name">Python</div>
+            <div class="badge-card-domain">Intelligence Artificielle</div>
+            <div class="badge-level-tag debutant">Débutant</div>
+            <div class="badge-card-date">20/04/2026</div>
+            <button class="btn btn-whatsapp" style="width:100%;justify-content:center;margin-top:4px;font-size:0.78rem;padding:8px" onclick="shareOnWhatsApp('py')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Partager
+            </button>
+          </div>
+        </div>
+
+        <!-- Share All -->
+        <div style="margin-top:1rem">
+          <button class="btn btn-whatsapp" onclick="sharePortfolioOnWhatsApp()" style="width:100%;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Partager tout mon portfolio sur WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- VALIDATION FORM -->
+      <div class="validation-panel">
+        <div class="validation-title">Demander une validation</div>
+        <div class="validation-sub">Soumettre une compétence à un formateur</div>
+        <div class="form-group" style="margin-bottom:0.8rem">
+          <div class="form-label">Votre e-mail <span>*</span></div>
+          <input type="email" value="amadou.barry@email.com">
+        </div>
+        <div class="form-group" style="margin-bottom:0.8rem">
+          <div class="form-label">Compétence visée <span>*</span></div>
+          <select><option>React.js</option><option>Node.js</option><option>TypeScript</option></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0.8rem">
+          <div class="form-label">Niveau sollicité <span>*</span></div>
+          <select><option>Débutant</option><option selected>Intermédiaire</option><option>Avancé</option><option>Expert</option></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0.8rem">
+          <div class="form-label">Formateur / Institution <span>*</span></div>
+          <select><option>Formateur ABC — 0xF0...982C</option></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0.8rem">
+          <div class="form-label">Fichier de preuve <span>*</span></div>
+          <div style="border:1px dashed var(--border);border-radius:8px;padding:20px;text-align:center;font-size:0.75rem;color:var(--text-muted);cursor:pointer">
+            ↑ Glisser-déposer ou cliquer pour joindre
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <div class="form-label">Message au formateur</div>
+          <textarea placeholder="Je maîtrise JavaScript depuis 8 mois..." style="min-height:60px"></textarea>
+        </div>
+        <button class="btn btn-orange" style="width:100%;justify-content:center" onclick="showToast('Demande envoyée ! Le formateur sera notifié.')">Envoyer la demande de validation</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-logo">Skill<span>Badge</span></div>
-      <div style="font-size:12px;color:#999;margin-top:4px;">La certification blockchain pour les talents numériques du Burkina Faso</div>
-    </div>
-    <div class="footer-links">
-      <a href="#">À propos</a>
-      <a href="#">Contact</a>
-      <a href="#">Formateurs partenaires</a>
-      <a href="#">Conditions d'utilisation</a>
-      <a href="#">Politique de confidentialité</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 SkillBadge · MIABE Hackathon · Darollo Technologies Corporation</span>
-    <span>ODD 4 · ODD 8 · ODD 9</span>
-  </div>
-</footer>
+<!-- ═══════════════════════════════════════════
+     PAGE RECRUTEUR
+════════════════════════════════════════════ -->
+<div class="page" id="page-recruteur">
+  <div class="content" style="background:var(--bg)">
+    <div class="recruiter-layout">
+      <div class="recruiter-header">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 14px;font-size:0.72rem;color:var(--text-muted);margin-bottom:1rem">
+          <span style="color:var(--accent-violet)">●</span> Vérification publique — aucun compte requis
+        </div>
+        <h1>Vérification de badge</h1>
+        <p>Vérifiez l'authenticité d'un badge NFT sur la blockchain — instantanément</p>
+      </div>
 
+      <div class="search-big">
+        <input type="text" id="rec-search" placeholder="0xAB4F3E... ou ID du badge (#BADGE_JS_001...)" oninput="recSearch()">
+        <button class="btn btn-violet" onclick="recSearch()">Vérifier</button>
+      </div>
+
+      <div class="no-account-note">
+        <span style="color:var(--accent-violet)">ℹ</span>
+        Toutes les données sont sur la blockchain — accessibles par tous, à tout moment. Aucune création de compte nécessaire.
+      </div>
+
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1.5rem">
+        💡 Wallet : <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent-blue)">0xAB4F3E982C1D7E56B3A9F012D4C8E7B1A5F230D9</code>
+        &nbsp;·&nbsp; Hash JS : <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent-green)">0x7f5a</code>
+        &nbsp;·&nbsp; Hash Python : <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent-green)">0x3c9b</code>
+      </div>
+
+      <!-- RESULT: wallet → tous les badges -->
+      <div class="result-section" id="rec-result-wallet">
+        <div class="result-header">
+          <div class="result-avatar">AB</div>
+          <div>
+            <div class="result-name">Amadou BARRY</div>
+            <div class="result-wallet">0xAB4F3E982C1D7E56B3A9F012D4C8E7B1A5F230D9</div>
+          </div>
+          <div class="authentic-tag" style="margin-left:auto">✓ COMPTE VÉRIFIÉ</div>
+        </div>
+        <div class="result-badges-title">BADGES CERTIFIÉS (2)</div>
+        <!-- Badge JS -->
+        <div class="rec-badge-card">
+          <div class="badge-card-icon intermediaire" style="width:48px;height:48px;font-size:1.1rem;border-radius:10px;flex-shrink:0"></>/></div>
+          <div class="rec-badge-details">
+            <div class="rec-badge-name">JavaScript <span class="badge-level-tag intermediaire" style="margin-left:6px">Intermédiaire</span></div>
+            <div class="rec-badge-meta">Développement Web · Émetteur : Formateur ABC · 01/05/2026</div>
+            <div class="rec-badge-hash">Hash : 0x7f5a...d9c1 · ID : #BADGE_JS_001_0xAB</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
+            <div class="authentic-tag">✓ AUTHENTIQUE</div>
+            <button class="blockchain-link" onclick="openBadgeDetail('js')" style="cursor:pointer;border:none;font-family:inherit">🔍 Voir détails</button>
+          </div>
+        </div>
+        <!-- Badge Python -->
+        <div class="rec-badge-card">
+          <div class="badge-card-icon debutant" style="width:48px;height:48px;font-size:1.5rem;border-radius:10px;flex-shrink:0">🐍</div>
+          <div class="rec-badge-details">
+            <div class="rec-badge-name">Python <span class="badge-level-tag debutant" style="margin-left:6px">Débutant</span></div>
+            <div class="rec-badge-meta">Intelligence Artificielle · Émetteur : Formateur ABC · 20/04/2026</div>
+            <div class="rec-badge-hash">Hash : 0x3c9b...e721 · ID : #BADGE_PY_002_0xAB</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
+            <div class="authentic-tag">✓ AUTHENTIQUE</div>
+            <button class="blockchain-link" onclick="openBadgeDetail('py')" style="cursor:pointer;border:none;font-family:inherit">🔍 Voir détails</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULT: hash → badge unique (rendered by JS) -->
+      <div class="result-section" id="rec-result-badge"></div>
+
+      <div class="not-found-msg" id="rec-not-found">
+        ⚠ Aucun badge trouvé pour cette adresse wallet ou cet identifiant.<br>
+        <span style="font-size:0.75rem">Vérifiez l'adresse et réessayez.</span>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="how-it-works" style="margin-top:1.5rem" id="how-it-works">
+        <div class="how-title">Comment ça fonctionne ?</div>
+        <div class="how-step"><div class="how-num">1</div><div class="how-text"><strong>Obtenez l'ID du badge ou le wallet</strong> — Demandez à l'apprenant son identifiant de badge ou son adresse wallet.</div></div>
+        <div class="how-step"><div class="how-num">2</div><div class="how-text"><strong>Saisissez dans la barre de recherche</strong> — Entrez l'ID ou le wallet dans le champ ci-dessus et cliquez sur Vérifier.</div></div>
+        <div class="how-step"><div class="how-num">3</div><div class="how-text"><strong>Résultat instantané</strong> — Le système interroge la blockchain et affiche le statut en moins d'une seconde.</div></div>
+        <div class="how-step"><div class="how-num">4</div><div class="how-text"><strong>Consultez les détails</strong> — Compétence, niveau, émetteur et date sont affichés avec le lien blockchain.</div></div>
+        <div style="margin-top:1rem;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.75rem;color:var(--text-muted)">
+          🔒 <strong>Aucun compte requis</strong> — La vérification est publique et instantanée. Toutes les données sont sur la blockchain, accessibles par tous.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- BADGE DETAIL MODAL -->
+<div class="badge-modal-overlay" id="badge-modal" onclick="if(event.target===this)closeBadgeModal()">
+  <div class="badge-modal-box">
+    <button class="badge-modal-close" onclick="closeBadgeModal()">✕</button>
+    <div id="badge-modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── DATA ───
+  const APPRENANT = {
+    name: 'Amadou BARRY',
+    email: 'amadou.barry@email.com',
+    wallet: '0xAB4F3E982C1D7E56B3A9F012D4C8E7B1A5F230D9',
+    walletShort: '0xAB...4F3E',
+    badges: ['JavaScript — Intermédiaire', 'Python — Débutant']
+  };
+
+  const WALLET_TRIGGERS = ['0xab', '0xAB', 'amadou', 'ab4f', 'AB4F', '4F3E', '4f3e', '230d9', '230D9'];
+
+  // ─── TAB SWITCHING ───
+  function switchTab(tab) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    document.querySelector(`.nav-tab[data-tab="${tab}"]`).classList.add('active');
+  }
+
+  // ─── FORMATEUR STEPS ───
+  let currentLevel = 'intermediaire';
+
+  function showFormateurStep(n) {
+    [1,2,3].forEach(i => {
+      document.getElementById('formateur-step-' + i).style.display = i === n ? 'block' : 'none';
+      const step = document.getElementById('fstep-' + i);
+      step.classList.remove('active', 'done');
+      if (i < n) step.classList.add('done');
+      if (i === n) step.classList.add('active');
+    });
+    [1,2].forEach(i => {
+      const conn = document.getElementById('conn-' + i);
+      conn.classList.toggle('done', i < n);
+    });
+  }
+
+  function selectLevel(level) {
+    currentLevel = level;
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelector('.level-btn.' + level).classList.add('selected');
+    updateBadgePreview();
+  }
+
+  function updateBadgePreview() {
+    const comp = document.getElementById('f-competence').value || 'Compétence';
+    const dom = document.getElementById('f-domaine').value;
+    const icon = document.getElementById('preview-icon');
+    const name = document.getElementById('preview-name');
+    const level = document.getElementById('preview-level');
+    const domain = document.getElementById('preview-domain');
+    const levelLabels = { debutant: 'Débutant', intermediaire: 'Intermédiaire', avance: 'Avancé', expert: 'Expert' };
+
+    name.textContent = comp;
+    domain.textContent = dom;
+    level.textContent = levelLabels[currentLevel] || 'Niveau';
+    level.className = 'badge-preview-level ' + currentLevel;
+    icon.className = 'badge-icon ' + currentLevel;
+  }
+
+  // Initialize level
+  selectLevel('intermediaire');
+
+  function goToStep2() {
+    const comp = document.getElementById('f-competence').value.trim();
+    if (!comp) { showToast('⚠ Veuillez renseigner la compétence spécifique'); return; }
+    const levelLabels = { debutant: 'Débutant', intermediaire: 'Intermédiaire', avance: 'Avancé', expert: 'Expert' };
+    document.getElementById('modal-badge-name').textContent = comp + ' — ' + levelLabels[currentLevel];
+    document.getElementById('conf-badge').textContent = comp + ' — ' + levelLabels[currentLevel];
+    showFormateurStep(2);
+    // Reset wallet
+    document.getElementById('wallet-input').value = '';
+    document.getElementById('wallet-found').classList.remove('visible');
+    document.getElementById('wallet-not-found').classList.remove('visible');
+    document.getElementById('btn-attribuer').style.opacity = '0.4';
+    document.getElementById('btn-attribuer').style.pointerEvents = 'none';
+  }
+
+  function searchWallet() {
+    const val = document.getElementById('wallet-input').value.trim();
+    const found = document.getElementById('wallet-found');
+    const notFound = document.getElementById('wallet-not-found');
+    const btn = document.getElementById('btn-attribuer');
+
+    if (val.length < 3) {
+      found.classList.remove('visible');
+      notFound.classList.remove('visible');
+      btn.style.opacity = '0.4';
+      btn.style.pointerEvents = 'none';
+      return;
+    }
+
+    const match = val.toLowerCase().includes('0xab') ||
+                  val.toLowerCase().includes('amadou') ||
+                  val.toLowerCase().includes('4f3e') ||
+                  val.toLowerCase().includes('4f3e982c') ||
+                  APPRENANT.wallet.toLowerCase().includes(val.toLowerCase());
+
+    if (match) {
+      found.classList.add('visible');
+      notFound.classList.remove('visible');
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    } else {
+      found.classList.remove('visible');
+      notFound.classList.add('visible');
+      btn.style.opacity = '0.4';
+      btn.style.pointerEvents = 'none';
+    }
+  }
+
+  function goToStep3() {
+    showFormateurStep(3);
+  }
+
+  function resetForm() {
+    document.getElementById('f-competence').value = '';
+    selectLevel('intermediaire');
+    updateBadgePreview();
+    showFormateurStep(1);
+  }
+
+  // ─── BADGE DATA ───
+  const BADGES_DATA = {
+    js: {
+      id: 'BADGE_JS_001_0xAB',
+      name: 'JavaScript',
+      domain: 'Développement Web',
+      level: 'Intermédiaire',
+      levelClass: 'intermediaire',
+      icon: '</>',
+      date: '01/05/2026',
+      issuer: 'Formateur ABC',
+      issuerWallet: '0xF0...982C',
+      hash: '0x7f5a8d3c2e1b9a4f6d0e5c8b2a7f3d9c1e4b6a8f2d0c3e5b7a9f1d3c5e7b9a1',
+      hashShort: '0x7f5a...d9c1',
+      verifyUrl: 'https://skillbadge.io/verify?badge=BADGE_JS_001_0xAB'
+    },
+    py: {
+      id: 'BADGE_PY_002_0xAB',
+      name: 'Python',
+      domain: 'Intelligence Artificielle',
+      level: 'Débutant',
+      levelClass: 'debutant',
+      icon: '🐍',
+      date: '20/04/2026',
+      issuer: 'Formateur ABC',
+      issuerWallet: '0xF0...982C',
+      hash: '0x3c9b1f4e7a2d6c8b0e5a3f9d1c4b7e2a6f8d0c3b5e7a9f1d3c5e7b9a1f3d5c7',
+      hashShort: '0x3c9b...e721',
+      verifyUrl: 'https://skillbadge.io/verify?badge=BADGE_PY_002_0xAB'
+    }
+  };
+
+  // ─── RECRUTEUR SEARCH ───
+  function recSearch() {
+    const val = document.getElementById('rec-search').value.trim().toLowerCase();
+    const resultWallet = document.getElementById('rec-result-wallet');
+    const resultBadge  = document.getElementById('rec-result-badge');
+    const notFound     = document.getElementById('rec-not-found');
+    const howItWorks   = document.getElementById('how-it-works');
+
+    resultWallet.classList.remove('visible');
+    resultBadge.classList.remove('visible');
+    notFound.classList.remove('visible');
+
+    if (val.length < 3) { howItWorks.style.display = 'block'; return; }
+    howItWorks.style.display = 'none';
+
+    // Hash/badge ID → single badge view
+    if (val.includes('badge_js') || val.includes('0x7f5a') || val.includes('7f5a')) {
+      showRecBadge(BADGES_DATA.js); return;
+    }
+    if (val.includes('badge_py') || val.includes('0x3c9b') || val.includes('3c9b')) {
+      showRecBadge(BADGES_DATA.py); return;
+    }
+
+    // Wallet → all badges
+    const isWallet = val.includes('0xab') || val.includes('4f3e') || val.includes('ab4f') ||
+                     APPRENANT.wallet.toLowerCase().includes(val);
+    if (isWallet) { resultWallet.classList.add('visible'); return; }
+
+    notFound.classList.add('visible');
+  }
+
+  function showRecBadge(badge) {
+    const el = document.getElementById('rec-result-badge');
+    el.innerHTML = `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="background:linear-gradient(135deg,#13131a,#1c1c28);border-bottom:1px solid var(--border);padding:1.5rem;display:flex;align-items:center;gap:1.5rem">
+          <div class="badge-card-icon ${badge.levelClass}" style="width:72px;height:72px;font-size:1.8rem;border-radius:14px;flex-shrink:0">${badge.icon}</div>
+          <div style="flex:1">
+            <div style="font-size:1.4rem;font-weight:800">${badge.name}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted)">${badge.domain}</div>
+            <div style="margin-top:6px"><span class="badge-level-tag ${badge.levelClass}">${badge.level}</span></div>
+          </div>
+          <div class="authentic-tag">✓ AUTHENTIQUE</div>
+        </div>
+        <div style="padding:1.5rem">
+          <table class="receipt-table" style="width:100%">
+            <tr><td>ID du badge</td><td>#${badge.id}</td></tr>
+            <tr><td>Compétence</td><td>${badge.name}</td></tr>
+            <tr><td>Domaine</td><td>${badge.domain}</td></tr>
+            <tr><td>Niveau</td><td><span class="badge-level-tag ${badge.levelClass}">${badge.level}</span></td></tr>
+            <tr><td>Apprenant</td><td>${APPRENANT.name} (${APPRENANT.walletShort})</td></tr>
+            <tr><td>Émetteur</td><td>${badge.issuer} (${badge.issuerWallet})</td></tr>
+            <tr><td>Date d'émission</td><td>${badge.date}</td></tr>
+            <tr><td>Hash blockchain</td><td><span class="hash-value" style="font-size:0.68rem;word-break:break-all">${badge.hash}</span></td></tr>
+            <tr><td>Statut</td><td><span class="confirmed-badge">✓ Confirmé sur la blockchain</span></td></tr>
+          </table>
+          <div style="margin-top:1.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <a class="blockchain-link" href="#" onclick="return false">🔗 Voir la transaction sur la blockchain ↗</a>
+            <button class="btn btn-secondary" style="font-size:0.78rem;padding:6px 14px" onclick="document.getElementById('rec-search').value='';recSearch()">← Nouvelle recherche</button>
+          </div>
+        </div>
+      </div>`;
+    el.classList.add('visible');
+  }
+
+  // ─── BADGE DETAIL MODAL (depuis vue wallet) ───
+  function openBadgeDetail(badgeKey) {
+    const badge = BADGES_DATA[badgeKey];
+    const modal = document.getElementById('badge-modal');
+    const body  = document.getElementById('badge-modal-body');
+    body.innerHTML = `
+      <div style="background:linear-gradient(135deg,#13131a,#1c1c28);border-bottom:1px solid var(--border);padding:1.5rem;display:flex;align-items:center;gap:1.5rem">
+        <div class="badge-card-icon ${badge.levelClass}" style="width:72px;height:72px;font-size:1.8rem;border-radius:14px;flex-shrink:0">${badge.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:1.4rem;font-weight:800">${badge.name}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">${badge.domain}</div>
+          <div style="margin-top:6px"><span class="badge-level-tag ${badge.levelClass}">${badge.level}</span></div>
+        </div>
+        <div class="authentic-tag">✓ AUTHENTIQUE</div>
+      </div>
+      <div style="padding:1.5rem">
+        <table class="receipt-table" style="width:100%">
+          <tr><td>ID du badge</td><td>#${badge.id}</td></tr>
+          <tr><td>Compétence</td><td>${badge.name}</td></tr>
+          <tr><td>Domaine</td><td>${badge.domain}</td></tr>
+          <tr><td>Niveau</td><td><span class="badge-level-tag ${badge.levelClass}">${badge.level}</span></td></tr>
+          <tr><td>Apprenant</td><td>${APPRENANT.name} (${APPRENANT.walletShort})</td></tr>
+          <tr><td>Émetteur</td><td>${badge.issuer} (${badge.issuerWallet})</td></tr>
+          <tr><td>Date d'émission</td><td>${badge.date}</td></tr>
+          <tr><td>Hash blockchain</td><td><span class="hash-value" style="font-size:0.68rem;word-break:break-all">${badge.hash}</span></td></tr>
+          <tr><td>Statut</td><td><span class="confirmed-badge">✓ Confirmé sur la blockchain</span></td></tr>
+        </table>
+        <div style="margin-top:1.2rem">
+          <a class="blockchain-link" href="#" onclick="return false">🔗 Voir la transaction sur la blockchain ↗</a>
+        </div>
+      </div>`;
+    modal.classList.add('open');
+  }
+
+  function closeBadgeModal() {
+    document.getElementById('badge-modal').classList.remove('open');
+  }
+
+  // ─── WHATSAPP SHARING ───
+  function shareOnWhatsApp(badgeKey) {
+    const badge = BADGES_DATA[badgeKey];
+    const msg = encodeURIComponent(
+      `🏅 *SkillBadge — Certification vérifiée*\n\n` +
+      `👤 *${APPRENANT.name}*\n` +
+      `📛 Badge : *${badge.name} — ${badge.level}*\n` +
+      `🎯 Domaine : ${badge.domain}\n` +
+      `📅 Obtenu le : ${badge.date}\n` +
+      `🏛 Émetteur : ${badge.issuer}\n` +
+      `🔑 ID : #${badge.id}\n\n` +
+      `✅ Badge authentifié sur la blockchain.\n` +
+      `🔗 Voir ce badge : ${badge.verifyUrl}`
+    );
+    window.open('https://wa.me/?text=' + msg, '_blank');
+  }
+
+  function sharePortfolioOnWhatsApp() {
+    const portfolioUrl = `https://skillbadge.io/portfolio?wallet=${APPRENANT.wallet}`;
+    const msg = encodeURIComponent(
+      `🏅 *Mon Portfolio SkillBadge — Certifications blockchain*\n\n` +
+      `👤 *${APPRENANT.name}*\n` +
+      `🔑 Wallet : ${APPRENANT.walletShort}\n\n` +
+      `📛 Mes badges certifiés :\n` +
+      `  ✅ JavaScript — Intermédiaire (01/05/2026)\n` +
+      `     🔗 ${BADGES_DATA.js.verifyUrl}\n\n` +
+      `  ✅ Python — Débutant (20/04/2026)\n` +
+      `     🔗 ${BADGES_DATA.py.verifyUrl}\n\n` +
+      `🌐 Portfolio complet : ${portfolioUrl}`
+    );
+    window.open('https://wa.me/?text=' + msg, '_blank');
+  }
+
+  // ─── TOAST ───
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Allow pressing Enter in wallet search
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const active = document.querySelector('.page.active');
+      if (active && active.id === 'page-formateur') searchWallet();
+      if (active && active.id === 'page-recruteur') recSearch();
+    }
+  });
+</script>
 </body>
 </html>
