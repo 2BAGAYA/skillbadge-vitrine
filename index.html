@@ -206,8 +206,8 @@
 
     <!-- STATS -->
     <div class="stats-bar">
-      <div class="stat-card"><div class="stat-val" style="color:var(--accent-green)">2</div><div class="stat-label">Badges obtenus</div></div>
-      <div class="stat-card"><div class="stat-val" style="color:var(--accent-blue)">Interm.</div><div class="stat-label">Niveau max</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-green)" id="stat-count">2</div><div class="stat-label">Badges obtenus</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent-blue)" id="stat-level">Interm.</div><div class="stat-label">Niveau max</div></div>
       <div class="stat-card"><div class="stat-val" style="color:var(--accent-orange)">0</div><div class="stat-label">En attente</div></div>
       <div class="stat-card"><div class="stat-val" style="color:var(--accent-violet)">88%</div><div class="stat-label">Profil complété</div></div>
     </div>
@@ -215,8 +215,8 @@
     <div class="portfolio-layout">
       <!-- BADGES -->
       <div>
-        <div class="section-title">Mes badges NFT</div>
-        <div class="badge-grid">
+        <div class="section-title">Mes badges NFT <span id="badge-count-label" style="color:var(--text-muted);font-weight:400;font-size:0.78rem">(2)</span></div>
+        <div class="badge-grid" id="portfolio-badge-grid">
           <!-- Badge 1 -->
           <div class="badge-card intermediaire">
             <div class="badge-verified">✓ Vérifié</div>
@@ -394,6 +394,7 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="dynamique.js"></script>
+  <script src="dynamique.js"></script>
+
 </body>
 </html>
