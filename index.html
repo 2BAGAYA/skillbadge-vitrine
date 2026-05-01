@@ -330,33 +330,8 @@
           </div>
           <div class="authentic-tag" style="margin-left:auto">✓ COMPTE VÉRIFIÉ</div>
         </div>
-        <div class="result-badges-title">BADGES CERTIFIÉS (2)</div>
-        <!-- Badge JS -->
-        <div class="rec-badge-card">
-          <div class="badge-card-icon intermediaire" style="width:48px;height:48px;font-size:1.1rem;border-radius:10px;flex-shrink:0"></>/></div>
-          <div class="rec-badge-details">
-            <div class="rec-badge-name">JavaScript <span class="badge-level-tag intermediaire" style="margin-left:6px">Intermédiaire</span></div>
-            <div class="rec-badge-meta">Développement Web · Émetteur : Formateur ABC · 01/05/2026</div>
-            <div class="rec-badge-hash">Hash : 0x7f5a...d9c1 · ID : #BADGE_JS_001_0xAB</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
-            <div class="authentic-tag">✓ AUTHENTIQUE</div>
-            <button class="blockchain-link" onclick="openBadgeDetail('js')" style="cursor:pointer;border:none;font-family:inherit">🔍 Voir détails</button>
-          </div>
-        </div>
-        <!-- Badge Python -->
-        <div class="rec-badge-card">
-          <div class="badge-card-icon debutant" style="width:48px;height:48px;font-size:1.5rem;border-radius:10px;flex-shrink:0">🐍</div>
-          <div class="rec-badge-details">
-            <div class="rec-badge-name">Python <span class="badge-level-tag debutant" style="margin-left:6px">Débutant</span></div>
-            <div class="rec-badge-meta">Intelligence Artificielle · Émetteur : Formateur ABC · 20/04/2026</div>
-            <div class="rec-badge-hash">Hash : 0x3c9b...e721 · ID : #BADGE_PY_002_0xAB</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
-            <div class="authentic-tag">✓ AUTHENTIQUE</div>
-            <button class="blockchain-link" onclick="openBadgeDetail('py')" style="cursor:pointer;border:none;font-family:inherit">🔍 Voir détails</button>
-          </div>
-        </div>
+        <div class="result-badges-title" id="rec-badges-title">BADGES CERTIFIÉS (2)</div>
+        <div id="rec-badges-list"></div>
       </div>
 
       <!-- RESULT: hash → badge unique (rendered by JS) -->
@@ -394,7 +369,7 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-  <script src="dynamique.js"></script>
+<script src="dynamique.js"></script>
 
 </body>
 </html>
