@@ -1,4 +1,4 @@
-  // ─── DATA ───
+    // ─── DATA ───
   const APPRENANT = {
     name: 'Amadou BARRY',
     email: 'amadou.barry@email.com',
@@ -278,6 +278,33 @@
     }
   };
 
+  // ─── RECRUTEUR : rendu dynamique des badges ───
+  function renderRecruiterBadges() {
+    const title = document.getElementById('rec-badges-title');
+    const list  = document.getElementById('rec-badges-list');
+
+    title.textContent = `BADGES CERTIFIÉS (${portfolioBadges.length})`;
+
+    list.innerHTML = portfolioBadges.map(b => {
+      const bdData = BADGES_DATA[b.key];
+      const badgeId   = bdData ? bdData.id   : 'BADGE_' + b.name.slice(0,3).toUpperCase() + '_0xAB';
+      const hashShort = bdData ? bdData.hashShort : '0x????...????';
+      return `
+        <div class="rec-badge-card">
+          <div class="badge-card-icon ${b.levelClass}" style="width:48px;height:48px;font-size:1.3rem;border-radius:10px;flex-shrink:0">${b.icon}</div>
+          <div class="rec-badge-details">
+            <div class="rec-badge-name">${b.name} <span class="badge-level-tag ${b.levelClass}" style="margin-left:6px">${b.level}</span></div>
+            <div class="rec-badge-meta">${b.domain} · Émetteur : Formateur ABC · ${b.date}</div>
+            <div class="rec-badge-hash">Hash : ${hashShort} · ID : #${badgeId}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
+            <div class="authentic-tag">✓ AUTHENTIQUE</div>
+            <button class="blockchain-link" onclick="openBadgeDetail('${b.key}')" style="cursor:pointer;border:none;font-family:inherit">🔍 Voir détails</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
   // ─── RECRUTEUR SEARCH ───
   function recSearch() {
     const val = document.getElementById('rec-search').value.trim().toLowerCase();
@@ -304,7 +331,11 @@
     // Wallet → all badges
     const isWallet = val.includes('0xab') || val.includes('4f3e') || val.includes('ab4f') ||
                      APPRENANT.wallet.toLowerCase().includes(val);
-    if (isWallet) { resultWallet.classList.add('visible'); return; }
+    if (isWallet) {
+      renderRecruiterBadges();
+      resultWallet.classList.add('visible');
+      return;
+    }
 
     notFound.classList.add('visible');
   }
@@ -345,7 +376,23 @@
 
   // ─── BADGE DETAIL MODAL (depuis vue wallet) ───
   function openBadgeDetail(badgeKey) {
-    const badge = BADGES_DATA[badgeKey];
+    // Chercher dans BADGES_DATA d'abord, sinon construire depuis portfolioBadges
+    let badge = BADGES_DATA[badgeKey];
+    if (!badge) {
+      const pb = portfolioBadges.find(b => b.key === badgeKey);
+      if (pb) {
+        badge = {
+          id: 'BADGE_' + pb.name.slice(0,3).toUpperCase() + '_0xAB',
+          name: pb.name, domain: pb.domain,
+          level: pb.level, levelClass: pb.levelClass, icon: pb.icon,
+          date: pb.date, issuer: 'Formateur ABC', issuerWallet: '0xF0...982C',
+          hash: '0x' + pb.key.replace('badge_','') + '...blockchain',
+          hashShort: '0x????...????',
+          verifyUrl: 'https://skillbadge.io/verify?badge=BADGE_' + pb.name.slice(0,3).toUpperCase()
+        };
+      }
+    }
+    if (!badge) return;
     const modal = document.getElementById('badge-modal');
     const body  = document.getElementById('badge-modal-body');
     body.innerHTML = `
